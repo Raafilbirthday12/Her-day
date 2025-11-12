@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Happy Birthday Raafil</title>
+  <meta name="description" content="A romantic, glowing, responsive birthday tribute site for Raafil." />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{--g1:#ff9a9e;--g2:#fad0c4;--g3:#fbc2eb;--g4:#a6c1ee}
+    body{background:linear-gradient(120deg,var(--g1),var(--g2),var(--g3),var(--g4));background-size:600% 600%;animation:grad 18s ease infinite;}
+    @keyframes grad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .balloon{position:absolute;border-radius:50%;opacity:0.95;animation:floatUp linear infinite}
+    @keyframes floatUp{0%{transform:translateY(120vh) scale(0.9)}100%{transform:translateY(-40vh) scale(1.05)}}
+    #confetti{position:fixed;left:0;top:0;pointer-events:none;width:100%;height:100%;z-index:60}
+    .glass{backdrop-filter: blur(6px);background:linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));box-shadow:0 10px 30px rgba(0,0,0,0.12)}
+    .nav-btn.active{background:linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));}
+    .photo{transition:transform .28s ease, box-shadow .28s ease}
+    .photo:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,0.18)}
+    .heart-pulse{animation:pulse 2s infinite ease-in-out;box-shadow:0 0 20px rgba(255,105,180,0.6);border-radius:1rem}
+    @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 0 15px rgba(255,105,180,0.5);}50%{transform:scale(1.05);box-shadow:0 0 25px rgba(255,192,203,0.9);}}
+    .floating-heart{position:absolute;width:20px;height:20px;background:radial-gradient(circle at 30% 30%,#ffafcc,#ff4d6d);clip-path:polygon(50% 0%,61% 13%,75% 13%,88% 26%,88% 43%,50% 78%,12% 43%,12% 26%,25% 13%,39% 13%);opacity:0.8;animation:floatHearts 10s linear infinite}
+    @keyframes floatHearts{0%{transform:translateY(100vh) scale(0.8);}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+    @media (max-width:640px){.hero-title{font-size:1.7rem}}
+  </style>
+</head>
+<body class="min-h-screen text-white antialiased relative overflow-x-hidden">
+  <canvas id="confetti"></canvas>
+  <div id="balloons" aria-hidden="true"></div>
+
+  <header class="p-6 sm:p-10 flex items-center justify-between max-w-6xl mx-auto">
+    <div class="flex items-center gap-4">
+      <div class="w-14 h-14 rounded-full glass flex items-center justify-center text-pink-50 font-bold text-xl">R</div>
+      <div>
+        <h1 class="text-2xl font-extrabold leading-none">Happy Birthday Vaathu</h1>
+        <p class="text-sm text-white/80">A Day to be remembered! made with love 💗</p>
+      </div>
+    </div>
+    <nav class="flex gap-2 items-center glass rounded-2xl p-2">
+      <button class="nav-btn px-4 py-2 rounded-xl text-sm font-medium" data-page="home">Home</button>
+      <button class="nav-btn px-4 py-2 rounded-xl text-sm font-medium" data-page="friend">Cherished People</button>
+      <button class="nav-btn px-4 py-2 rounded-xl text-sm font-medium" data-page="family">Your Heart’s Home</button>
+      <button class="nav-btn px-4 py-2 rounded-xl text-sm font-medium" data-page="special">Someone Special</button>
+    </nav>
+  </header>
+
+  <main class="max-w-6xl mx-auto p-6 sm:p-10 relative z-50">
+    <section id="page-home" class="page glass rounded-3xl p-8 sm:p-12">
+      <h2 class="hero-title text-4xl sm:text-5xl font-extrabold text-center mb-8">Happy Birthday Dear <span class="text-rose-100">Raafil</span> 🎂</h2>
+      <p class="text-center text-lg text-white/85 mb-6">
+        It’s your day to smile for no reason at all 💖<br>
+        Today’s about celebrating the wonderful human you are 💫<br>
+        More memories, more laughter, more *you*!
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <img src="/images/raafil1.jpg" class="photo heart-pulse rounded-2xl cursor-pointer" alt="Raafil 1" />
+        <img src="/images/raafil2.jpg" class="photo heart-pulse rounded-2xl cursor-pointer" alt="Raafil 2" />
+        <img src="/images/raafil3.jpg" class="photo heart-pulse rounded-2xl cursor-pointer" alt="Raafil 3" />
+      </div>
+      <div class="mt-8 flex justify-center">
+        <button id="surpriseBtn" class="px-6 py-3 rounded-full font-semibold glass shadow hover:scale-105 transition">If you love yourself just click it!</button>
+      </div>
+    </section>
+
+    <div id="dynamicPages" class="mt-8 space-y-6"></div>
+  </main>
+
+  <div id="lightbox" class="fixed inset-0 bg-black/70 hidden items-center justify-center z-80">
+    <div class="max-w-3xl w-full p-4">
+      <button id="closeLightbox" class="mb-4 px-3 py-2 rounded bg-white/10">Close</button>
+      <img id="lightboxImg" src="" alt="" class="w-full rounded-lg shadow-lg" />
+    </div>
+  </div>
+
+  <audio id="specialMusic" src="/music/muzhumathi.mp3" loop autoplay></audio>
+<button id="musicToggle" 
+  class="fixed bottom-6 right-6 z-[100] bg-pink-500 hover:bg-pink-600 text-white p-4 rounded-full shadow-lg transition flex items-center justify-center">
+  <svg id="musicIcon" xmlns="/music/muzhumathi.mp3" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-2v13" />
+  </svg>
+</button>
+
+
+  <script>
+    const pages = [
+      {id:'friend',title:'Friend',subtitle:'Memories with your dearest friends',owner:'friend',message:'Happy Birthday to the one who makes every memory unforgettable! From late-night laughs to crazy adventures, we’ve had the best times together — and we can’t wait for more. Love you, bestie!',photos:30},
+      {id:'family',title:'Family',subtitle:'Cherished family moments',owner:'family',message:'Happy Birthday, sweetheart! Every memory we’ve made together fills our hearts with joy. We’re so proud of the person you’ve become and so grateful for every laugh, every hug, and every moment we’ve shared as a family.',photos:20},
+      {id:'special',title:'Special',subtitle:'From your special person 💖',owner:'special',message:'Happy Birthday to the one who means more to me than words can ever describe... (your message here 💌)',photos:50,special:true}
+    ];
+
+    const dynamicRoot = document.getElementById('dynamicPages');
+
+    function createGalleryHTML(page) {
+      const cont = document.createElement('section');
+      cont.id = 'page-' + page.id;
+      cont.className = 'page glass rounded-3xl p-6 sm:p-10 hidden';
+
+      let decor = '';
+      if (page.special) {
+        decor = `<div class='relative overflow-hidden'>
+          <div id='hearts'></div>
+          <div class='text-center text-3xl font-extrabold text-yellow-300 animate-pulse mb-4'>💖 Special Messages for Raafil 💖</div>
+          <div class='grid sm:grid-cols-2 md:grid-cols-3 gap-4 relative z-10' id='messagesGrid'></div>
+        </div>`;
+      }
+
+      cont.innerHTML = `${decor}
+        <div class="flex flex-col lg:flex-row gap-6 mt-6">
+          <div class="flex-1">
+            <h3 class="text-2xl font-bold">${page.title}</h3>
+            <p class="mt-2 text-white/80">${page.subtitle}</p>
+            <p class="mt-4 text-white/90">${page.message}</p>
+            <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="gallery-${page.id}"></div>
+          </div>
+        </div>`;
+
+      setTimeout(() => {
+        const gallery = cont.querySelector('#gallery-' + page.id);
+        for (let i = 1; i <= page.photos; i++) {
+          const img = document.createElement('img');
+          img.src = `/images/${page.id}${i}.jpg`;
+
+          img.alt = `${page.owner} photo ${i}`;
+          img.className = 'photo w-full rounded-lg cursor-pointer';
+          img.style.objectFit = 'cover';
+          img.addEventListener('click', () => openLightbox(img.src));
+          const wrapper = document.createElement('div');
+          wrapper.className = 'overflow-hidden rounded-lg';
+          wrapper.appendChild(img);
+          gallery.appendChild(wrapper);
+        }
+
+        if (page.special) {
+          const msgGrid = cont.querySelector('#messagesGrid');
+          const messages = [
+            "You light up every moment, Raafil!",
+            "Your smile is pure sunshine!",
+            "The world is brighter with you in it!",
+            "Keep shining always!",
+            "Happy Birthday, my special one!"
+          ];
+          messages.forEach(m => {
+            const card = document.createElement('div');
+            card.className = 'p-4 rounded-xl glass text-center animate-pulse';
+            card.innerHTML = `<p class='text-white/90'>${m}</p>`;
+            msgGrid.appendChild(card);
+          });
+
+          for (let i = 0; i < 20; i++) {
+            const h = document.createElement('div');
+            h.className = 'floating-heart';
+            h.style.left = Math.random() * 100 + '%';
+            h.style.animationDuration = (8 + Math.random() * 4) + 's';
+            cont.querySelector('#hearts').appendChild(h);
+          }
+        }
+      }, 50);
+
+      return cont;
+    }
+
+    pages.forEach(p => dynamicRoot.appendChild(createGalleryHTML(p)));
+
+    const navBtns = document.querySelectorAll('.nav-btn');
+    function showPage(id) {
+      document.querySelectorAll('.page').forEach(el => el.classList.add('hidden'));
+      navBtns.forEach(b => b.classList.remove('active'));
+      if (id === 'home') {
+        document.getElementById('page-home').classList.remove('hidden');
+        document.querySelector('.nav-btn[data-page="home"]').classList.add('active');
+      } else {
+        const el = document.getElementById('page-' + id);
+        if (el) el.classList.remove('hidden');
+        document.querySelector('.nav-btn[data-page="' + id + '"]').classList.add('active');
+        if (id === 'special') document.getElementById('specialMusic').play().catch(() => {});
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    navBtns.forEach(btn => btn.addEventListener('click', () => showPage(btn.dataset.page)));
+    showPage('home');
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    document.getElementById('closeLightbox').addEventListener('click', () => lightbox.classList.add('hidden'));
+    function openLightbox(src) { lightboxImg.src = src; lightbox.classList.remove('hidden'); }
+
+    function launchConfetti(num = 150) {
+      const canvas = document.getElementById('confetti');
+      const ctx = canvas.getContext('2d');
+      canvas.width = innerWidth; canvas.height = innerHeight;
+      const pieces = [];
+      const colors = ['#FF6B6B', '#FFD93D', '#6BCB77', '#4D96FF', '#DA70FF'];
+      for (let i = 0; i < num; i++)
+        pieces.push({x: Math.random() * canvas.width, y: Math.random() * canvas.height - 200, vx: (Math.random() - 0.5) * 6, vy: Math.random() * 6 + 2, r: Math.random() * 7 + 4, color: colors[Math.floor(Math.random() * colors.length)], tilt: Math.random() * 0.8 - 0.4});
+      function frame() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of pieces) {
+          p.x += p.vx; p.y += p.vy; p.vy += 0.06; p.tilt += 0.02;
+          ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.tilt); ctx.fillStyle = p.color; ctx.fillRect(-p.r/2, -p.r/2, p.r, p.r*0.6); ctx.restore();
+        }
+        for (let i = pieces.length - 1; i >= 0; i--) if (pieces[i].y > canvas.height + 50) pieces.splice(i, 1);
+        if (pieces.length > 0) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    document.getElementById('surpriseBtn').addEventListener('click', () => launchConfetti(220));
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.add('hidden'); });
+    window.addEventListener('resize', () => {
+      const c = document.getElementById('confetti');
+      c.width = innerWidth; c.height = innerHeight;
+    });
+const music = document.getElementById('specialMusic');
+const toggleBtn = document.getElementById('musicToggle');
+const icon = document.getElementById('musicIcon');
+
+toggleBtn.addEventListener('click', () => {
+  if (music.paused) {
+    music.play();
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-2v13" />'; // Play icon
+  } else {
+    music.pause();
+    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M6 4h2v16H6zm10 0h2v16h-2z" />'; // Pause icon
+  }
+});
+
+  </script>
+</body>
+</html>
